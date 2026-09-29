@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario</title>
+</head>
+<body>
+    <h1>Inventario</h1>
+    <label>
+        Código: <input type="text" id="txtCodigo"><br><br>
+    </label>
+
+    <label>
+        Nombre: <input type="text" id="txtNombre"><br><br>
+    </label>
+
+    <label>
+        Cnatidad: <input type="text" id="txtCantidad"><br><br>
+    </label>
+
+    <label>
+        Costo: <input type="text" id="txtCosto"><br><br>
+    </label>
+
+    <label>
+        Posición: <input type="text" id="txtPosicion"><br><br>
+    </label>
+
+    <button type="button" id="btnAdd">Agregar</button>
+    <button type="button" id="btnAddInicio">Agregar al inicio</button>
+    <button type="button" id="btnInsertar">Insertar</button>
+    <button type="button" id="btnBuscar">Buscar</button>
+    <button type="button" id="btnEliminar">Eliminar</button>
+    <button type="button" id="btnExtraer">Extraer primero</button>
+    <button type="button" id="btnListar">Listar</button>
+    <button type="button" id="btnListarInverso">Listar inverso</button>
+    <hr>
+
+    <div id="detalle"></div>
+
+    <script src="producto.js"></script>
+    <script src="inventario.js"></script>
+    <script>
+        let inventario = new Inventario();
+        let detalle = document.getElementById("detalle");
+
+        const leerProducto = () => {
+            let codigo = document.getElementById("txtCodigo").value;
+            let nombre = document.getElementById("txtNombre").value;
+            let cantidad = document.getElementById("txtCantidad").value;
+            let costo = document.getElementById("txtCosto").value;
+            return new Producto(codigo, nombre, cantidad, costo);
+        }
+
+        const btnAdd = document.getElementById("btnAdd");
+        btnAdd.addEventListener("click", () => {
+            let producto = leerProducto();
+            inventario.agregar(producto);
+            detalle.innerHTML += "<h3>Se agregó</h3>" + producto.infoHtml();
+        })
+
+        const btnAddInicio = document.getElementById("btnAddInicio");
+        btnAddInicio.addEventListener("click", () => {
+            let producto = leerProducto();
+            inventario.agregarInicio(producto);
+            detalle.innerHTML += "<h3>Se agregó al inicio</h3>" + producto.infoHtml();
+        })
+
+        const btnInsertar = document.getElementById("btnInsertar");
+        btnInsertar.addEventListener("click", () => {
+            let posicion = parseInt(document.getElementById("txtPosicion").value);
+            let producto = leerProducto();
+            if (inventario.insertar(posicion, producto)) {
+                detalle.innerHTML += "<h3>Se insertó en la posición " + posicion + "</h3>" + producto.infoHtml();
+            } else {
+                detalle.innerHTML += "<h3>Posición no válida</h3>";
+            }
+        })
+
+        const btnBuscar = document.getElementById("btnBuscar");
+        btnBuscar.addEventListener("click", () => {
+            let codigo = document.getElementById("txtCodigo").value;
+            let res = inventario.buscar(codigo);
+            if (res == null) {
+                detalle.innerHTML += "<h3>No existe</h3>";
+            } else {
+                detalle.innerHTML += "<h3>Se encontró</h3>" + res.infoHtml();
+            }
+        })
+
+        const btnEliminar = document.getElementById("btnEliminar");
+        btnEliminar.addEventListener("click", () => {
+            let codigo = document.getElementById("txtCodigo").value;
+            let res = inventario.eliminar(codigo);
+            if (res == null) {
+                detalle.innerHTML += "<h3>No existe</h3>";
+            } else {
+                detalle.innerHTML += "<h3>Se eliminó</h3>" + res.infoHtml();
+            }
+        })
+
+        const btnExtraer = document.getElementById("btnExtraer");
+        btnExtraer.addEventListener("click", () => {
+            let res = inventario.extraerPrimero();
+            if (res == null) {
+                detalle.innerHTML += "<h3>Inventario vacío</h3>";
+            } else {
+                detalle.innerHTML += "<h3>El primero es</h3>" + res.infoHtml();
+            }
+        })
+
+        const btnListar = document.getElementById("btnListar");
+        btnListar.addEventListener("click", () => {
+            detalle.innerHTML += "<h3>Listado</h3>" + inventario.listar();
+        })
+
+        const btnListarInverso = document.getElementById("btnListarInverso");
+        btnListarInverso.addEventListener("click", () => {
+            detalle.innerHTML += "<h3>Listado inverso</h3>" + inventario.listarInverso();
+        })
+    </script>
+</body>
+</html>
